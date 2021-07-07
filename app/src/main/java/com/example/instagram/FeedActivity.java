@@ -5,12 +5,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +60,25 @@ public class FeedActivity extends AppCompatActivity {
 
         // set the adapter on the recycler view
         rvPosts.setAdapter(adapter);
+        adapter.setOnItemClickListener(new PostsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                Toast.makeText(
+                        FeedActivity.this,
+                        "An item at position " + position + " clicked!",
+                        Toast.LENGTH_SHORT).show();
+
+                Intent i = new Intent(FeedActivity.this, PostDetailActivity.class);
+                i.putExtra("post", Parcels.wrap(allPosts.get(position)));
+                startActivity(i);
+
+                // finish();
+                // Handle item click here:
+                // Create Intent to start BookDetailActivity
+                // Get Book at the given position
+                // Pass the book into details activity using extras
+            }
+        });
         // set the layout manager on the recycler view
         rvPosts.setLayoutManager(new LinearLayoutManager(this));
         // query posts from Parstagram
@@ -86,6 +110,7 @@ public class FeedActivity extends AppCompatActivity {
                 }
 
                 // save received posts to list and notify adapter of new data
+                allPosts.clear();
                 allPosts.addAll(posts);
                 adapter.notifyDataSetChanged();
             }
