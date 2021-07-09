@@ -56,4 +56,6 @@ dependencies {
     implementation "androidx.appcompat:appcompat:${appCompatVersion}"
     implementation "com.google.android.material:material:${designSupportVersion}"
 
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+
 }

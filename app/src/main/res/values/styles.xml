@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Menu">
+        <item name="android:colorBackground">#ffffff</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:listSelector">#ffffff</item>
+        <item name="android:popupBackground">#ffffff</item>
+    </style>
+</resources>

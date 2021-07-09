@@ -101,6 +101,7 @@ public class ProfileFragment extends Fragment {
         //currentUser = ParseUser.getCurrentUser();
         Intent i = new Intent(getContext(), LoginActivity.class);
         startActivity(i);
+        getActivity().finish();
         //finish();
     }
 /*
