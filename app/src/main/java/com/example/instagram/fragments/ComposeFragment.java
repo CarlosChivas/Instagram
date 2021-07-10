@@ -37,11 +37,6 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ComposeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ComposeFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -53,6 +48,7 @@ public class ComposeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    //Variables needed for the make post activity
     public static final String TAG = "Fragment";
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     private EditText etDescription;
@@ -62,19 +58,10 @@ public class ComposeFragment extends Fragment {
     private File photoFile;
     public String photoFileName = "photo.jpg";
 
+    // Required empty public constructor
     public ComposeFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ComposeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ComposeFragment newInstance(String param1, String param2) {
         ComposeFragment fragment = new ComposeFragment();
         Bundle args = new Bundle();
@@ -95,8 +82,7 @@ public class ComposeFragment extends Fragment {
 
     //The onCreateView method is called when Fragment should create its View object hierarchy
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_compose, container, false);
     }
@@ -144,8 +130,6 @@ public class ComposeFragment extends Fragment {
         photoFile = getPhotoFileUri(photoFileName);
 
         // wrap File object into a content provider
-        // required for API >= 24
-        // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
         Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
@@ -189,6 +173,7 @@ public class ComposeFragment extends Fragment {
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
+    //We use this method to save the post
     private void savePost(String description, ParseUser currentUser, File photoFile){
         Post post = new Post();
         post.setDescription(description);

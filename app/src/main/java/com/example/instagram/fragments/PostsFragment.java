@@ -1,9 +1,5 @@
 package com.example.instagram.fragments;
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,23 +10,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.instagram.FeedActivity;
 import com.example.instagram.Post;
-import com.example.instagram.PostDetailActivity;
 import com.example.instagram.PostsAdapter;
 import com.example.instagram.R;
 import com.parse.FindCallback;
@@ -38,17 +28,10 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 
-import org.parceler.Parcels;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PostsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PostsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -127,6 +110,7 @@ public class PostsFragment extends Fragment {
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
         queryPosts();
 
+        //We create a pop-up for the post details
         postsAdapter.setOnItemClickListener(new PostsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
@@ -157,8 +141,6 @@ public class PostsFragment extends Fragment {
                 String likesString = "Liked by "+likes;
                 tvLikesDetails.setText(likesString);
 
-                //Glide.with(this).load(movies.get(position).getPosterPath()).placeholder(R.drawable.flicks_movie_placeholder).transform(new CircleCrop()).into(imageView);
-
                 dialogBuilder.setView(detailsView);
                 dialog = dialogBuilder.create();
                 dialog.show();
@@ -184,6 +166,7 @@ public class PostsFragment extends Fragment {
 
     }
 
+    //Method to get the Posts
     protected void queryPosts() {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
@@ -206,8 +189,8 @@ public class PostsFragment extends Fragment {
         });
     }
 
+    //method to calculate how long ago the post was created
     public static String calculateTimeAgo(Date createdAt) {
-
         int SECOND_MILLIS = 1000;
         int MINUTE_MILLIS = 60 * SECOND_MILLIS;
         int HOUR_MILLIS = 60 * MINUTE_MILLIS;
@@ -217,8 +200,8 @@ public class PostsFragment extends Fragment {
             createdAt.getTime();
             long time = createdAt.getTime();
             long now = System.currentTimeMillis();
-
             final long diff = now - time;
+
             if (diff < MINUTE_MILLIS) {
                 return "just now";
             } else if (diff < 2 * MINUTE_MILLIS) {

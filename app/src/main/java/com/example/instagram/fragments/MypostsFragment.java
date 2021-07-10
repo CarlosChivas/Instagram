@@ -12,6 +12,7 @@ import java.util.List;
 
 public class MypostsFragment extends PostsFragment {
 
+    //We override this Post Fragment method to get only posts from this user
     @Override
     protected void queryPosts() {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
