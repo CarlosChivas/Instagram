@@ -42,7 +42,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvLikedBy"
             android:layout_marginTop="20dp"
+            android:fontFamily="@font/amaranth"
             android:textColor="#000000"
+            android:textSize="20dp"
+            android:textStyle="bold"
             tools:text="This is the description" />
 
         <ImageView

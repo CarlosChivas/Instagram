@@ -7,19 +7,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.instagram.LoginActivity;
 import com.example.instagram.MainActivity;
 import com.example.instagram.Post;
 import com.example.instagram.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -41,7 +45,8 @@ public class ProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private TextView username;
+    private ImageView ivProfilePhoto;
+    private TextView tvProfileUsername;
     private Button btnLogout;
 
     public ProfileFragment() {
@@ -85,7 +90,8 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //username = view.findViewById(R.id.usernameProfile);
+        tvProfileUsername = view.findViewById(R.id.tvProfileUsername);
+        ivProfilePhoto = view.findViewById(R.id.ivProfilePhoto);
         btnLogout = view.findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +99,12 @@ public class ProfileFragment extends Fragment {
                 logout();
             }
         });
+
+        tvProfileUsername.setText("Hi " + ParseUser.getCurrentUser().getUsername());
+        ParseFile imageUser = ParseUser.getCurrentUser().getParseFile("photoProfile");
+        if(imageUser != null){
+            Glide.with(getContext()).load(imageUser.getUrl()).circleCrop().into(ivProfilePhoto);
+        }
     }
 
     private void logout(){
@@ -103,27 +115,5 @@ public class ProfileFragment extends Fragment {
         startActivity(i);
         getActivity().finish();
     }
-/*
-    protected void queryUser() {
-        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-        query.include(Post.KEY_USER);
-        query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
-        query.setLimit(20);
-        query.addDescendingOrder(Post.KEY_CREATED);
-        query.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> posts, ParseException e) {
-                if(e != null){
-                    Log.e(TAG, "Issue with getting posts", e);
-                    return;
-                }
-                for(Post post : posts){
-                    Log.i(TAG, "Posts: "+post.getDescription() + " username: " + post.getUser().getUsername());
-                }
-                allPosts.clear();
-                allPosts.addAll(posts);
-                postsAdapter.notifyDataSetChanged();
-            }
-        });
-    }*/
+
 }

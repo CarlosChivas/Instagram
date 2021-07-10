@@ -153,48 +153,17 @@ public class PostsFragment extends Fragment {
                 if(imageUser != null){
                     Glide.with(getContext()).load(imageUser.getUrl()).circleCrop().into(ivProfileDetails);
                 }
-                tvLikesDetails.setText("Liked by 30");
-
-
-
-
-
-                //infoMovieView.setBackgroundColor(Color.parseColor(colors.get(position - ((position/4)*4))));
-
-
-
+                int likes = allPosts.get(position).getLikes();
+                String likesString = "Liked by "+likes;
+                tvLikesDetails.setText(likesString);
 
                 //Glide.with(this).load(movies.get(position).getPosterPath()).placeholder(R.drawable.flicks_movie_placeholder).transform(new CircleCrop()).into(imageView);
 
                 dialogBuilder.setView(detailsView);
                 dialog = dialogBuilder.create();
                 dialog.show();
-
-                /*close_info.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });*/
-
-                /*Intent i = new Intent(FeedActivity.this, PostDetailActivity.class);
-                i.putExtra("post", Parcels.wrap(allPosts.get(position)));
-                startActivity(i);
-*/
-                // finish();
-                // Handle item click here:
-                // Create Intent to start BookDetailActivity
-                // Get Book at the given position
-                // Pass the book into details activity using extras
             }
         });
-
-        //Steps to use the recycler view
-        //0. create layout for one row in the list
-        //1. create the adapter
-        //2. create the data source
-        //3. set the adapter on the recycler view
-        //4. set the layout manager on the recycler view
 
         //Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
