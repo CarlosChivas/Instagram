@@ -20,16 +20,13 @@ public class Post extends ParseObject{
     public void setDescription(String description){
         put(KEY_DESCRIPTION, description);
     }
-
     public int getLikes(){ return getInt(KEY_LIKES);}
-
     public ParseFile getImage(){
         return getParseFile(KEY_IMAGE);
     }
     public void setImage(ParseFile parseFile){
         put(KEY_IMAGE, parseFile);
     }
-
     public ParseUser getUser(){
         return getParseUser(KEY_USER);
     }

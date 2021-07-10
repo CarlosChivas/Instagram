@@ -28,7 +28,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         this.posts = posts;
     }
 
-
     // Define the listener interface
     public interface OnItemClickListener {
         void onItemClick(View itemView, int position);
@@ -95,10 +94,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             tvUsername.setText(post.getUser().getUsername());
             ParseFile image = post.getImage();
             if (image != null) {
+                //Load the post image
                 Glide.with(context).load(image.getUrl()).into(ivImage);
             }
             ParseFile imageUser = post.getUser().getParseFile("photoProfile");
             if(imageUser != null){
+                //Load the user image
                 Glide.with(context).load(imageUser.getUrl()).circleCrop().into(imUserFeed);
             }
         }

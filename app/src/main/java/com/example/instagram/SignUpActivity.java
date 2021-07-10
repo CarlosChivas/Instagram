@@ -43,15 +43,13 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
+    //Method to create a new user in the database
     private void signUp(String username, String password){
         // Create the ParseUser
         ParseUser user = new ParseUser();
         // Set core properties
         user.setUsername(username);
         user.setPassword(password);
-        //user.setEmail("email@example.com");
-        // Set custom properties
-        //user.put("phone", "650-253-0000");
         // Invoke signUpInBackground
         user.signUpInBackground(new SignUpCallback() {
             public void done(ParseException e) {
@@ -59,12 +57,10 @@ public class SignUpActivity extends AppCompatActivity {
                     Intent i = new Intent(SignUpActivity.this, MainActivity.class);
                     startActivity(i);
                     finish();
-                    // Hooray! Let them use the app now.
                 } else {
+                    //Issue with signUp
                     Log.e(TAG, "Error with signUp");
                     Toast.makeText(SignUpActivity.this, "Error with signUp", Toast.LENGTH_SHORT).show();
-                    // Sign up didn't succeed. Look at the ParseException
-                    // to figure out what went wrong
                 }
             }
         });

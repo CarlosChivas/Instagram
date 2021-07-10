@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        //btnSignUp.setBackgroundColor();
+        //Button for open the signup activity
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    //User Login
     private void loginUser(String username, String password){
         Log.i(TAG, "Attempting to login user " + username);
         ParseUser.logInInBackground(username, password, new LogInCallback() {
@@ -75,6 +76,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    //Helper method
     private void goMainActivity(){
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
