@@ -102,7 +102,6 @@ public class ProfileFragment extends Fragment {
         Intent i = new Intent(getContext(), LoginActivity.class);
         startActivity(i);
         getActivity().finish();
-        //finish();
     }
 /*
     protected void queryUser() {

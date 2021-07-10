@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PostDetailActivity"
-    android:orientation="vertical">
+    android:padding="10dp"
+    tools:context=".PostDetailActivity">
 
         <TextView
             android:id="@+id/tvUsernameDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="35dp"
             android:text="TextView"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             tools:text="Carlos" />
@@ -19,12 +23,16 @@
             android:id="@+id/createdAt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/tvDescriptionDetails"
+            android:layout_marginTop="13dp"
             android:text="TextView" />
 
         <ImageView
             android:id="@+id/ivImageDetails"
             android:layout_width="match_parent"
             android:layout_height="300dp"
+            android:layout_below="@+id/tvUsernameDetails"
+            android:layout_marginTop="12dp"
             android:scaleType="centerCrop"
             tools:srcCompat="@tools:sample/avatars" />
 
@@ -32,7 +40,36 @@
             android:id="@+id/tvDescriptionDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_below="@+id/tvLikedBy"
+            android:layout_marginTop="20dp"
+            android:textColor="#000000"
             tools:text="This is the description" />
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/ivUserDetails"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="5dp"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/tvLikedBy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivImageDetails"
+            android:layout_marginTop="29dp"
+            android:text="TextView" />
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivImageDetails"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="29dp"
+            android:layout_toEndOf="@+id/tvLikedBy"
+            android:background="#FFFFFF"
+            app:srcCompat="@drawable/ufi_heart" />
+
+</RelativeLayout>

@@ -1,26 +1,47 @@
 package com.example.instagram.fragments;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
+import com.example.instagram.FeedActivity;
 import com.example.instagram.Post;
+import com.example.instagram.PostDetailActivity;
 import com.example.instagram.PostsAdapter;
 import com.example.instagram.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseQuery;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,6 +64,18 @@ public class PostsFragment extends Fragment {
     private RecyclerView rvPosts;
     protected PostsAdapter postsAdapter;
     protected List<Post> allPosts;
+    private SwipeRefreshLayout swipeContainer;
+
+    //Elements for info movie
+    AlertDialog.Builder dialogBuilder;
+    AlertDialog dialog;
+
+    private TextView tvUsernameDetails;
+    private TextView createdAt;
+    private ImageView ivImageDetails;
+    private ImageView ivProfileDetails;
+    private TextView tvDescriptionDetails;
+    private TextView tvLikesDetails;
 
     public PostsFragment() {
         // Required empty public constructor
@@ -90,8 +123,71 @@ public class PostsFragment extends Fragment {
         allPosts = new ArrayList<>();
         postsAdapter = new PostsAdapter(getContext(), allPosts);
         rvPosts.setAdapter(postsAdapter);
+
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
         queryPosts();
+
+        postsAdapter.setOnItemClickListener(new PostsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+
+                dialogBuilder = new AlertDialog.Builder(getContext());
+                final View detailsView = getLayoutInflater().inflate(R.layout.activity_post_detail, null);
+
+                tvUsernameDetails = detailsView.findViewById(R.id.tvUsernameDetails);
+                createdAt = detailsView.findViewById(R.id.createdAt);
+                ivImageDetails = detailsView.findViewById(R.id.ivImageDetails);
+                ivProfileDetails = detailsView.findViewById(R.id.ivUserDetails);
+                tvDescriptionDetails = detailsView.findViewById(R.id.tvDescriptionDetails);
+                tvLikesDetails = detailsView.findViewById(R.id.tvLikedBy);
+
+                tvDescriptionDetails.setText(allPosts.get(position).getDescription());
+                tvUsernameDetails.setText(allPosts.get(position).getUser().getUsername());
+                String createdAtAgo = "Created " + calculateTimeAgo(allPosts.get(position).getCreatedAt()) + " ago";
+                createdAt.setText(createdAtAgo);
+                ParseFile image = allPosts.get(position).getImage();
+                if (image != null) {
+                    Glide.with(getContext()).load(image.getUrl()).apply(RequestOptions.bitmapTransform(new RoundedCorners(50))).into(ivImageDetails);
+                }
+                ParseFile imageUser = allPosts.get(position).getUser().getParseFile("photoProfile");
+                if(imageUser != null){
+                    Glide.with(getContext()).load(imageUser.getUrl()).circleCrop().into(ivProfileDetails);
+                }
+                tvLikesDetails.setText("Liked by 30");
+
+
+
+
+
+                //infoMovieView.setBackgroundColor(Color.parseColor(colors.get(position - ((position/4)*4))));
+
+
+
+
+                //Glide.with(this).load(movies.get(position).getPosterPath()).placeholder(R.drawable.flicks_movie_placeholder).transform(new CircleCrop()).into(imageView);
+
+                dialogBuilder.setView(detailsView);
+                dialog = dialogBuilder.create();
+                dialog.show();
+
+                /*close_info.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });*/
+
+                /*Intent i = new Intent(FeedActivity.this, PostDetailActivity.class);
+                i.putExtra("post", Parcels.wrap(allPosts.get(position)));
+                startActivity(i);
+*/
+                // finish();
+                // Handle item click here:
+                // Create Intent to start BookDetailActivity
+                // Get Book at the given position
+                // Pass the book into details activity using extras
+            }
+        });
 
         //Steps to use the recycler view
         //0. create layout for one row in the list
@@ -99,6 +195,24 @@ public class PostsFragment extends Fragment {
         //2. create the data source
         //3. set the adapter on the recycler view
         //4. set the layout manager on the recycler view
+
+        //Lookup the swipe container view
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        //Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                queryPosts();
+                swipeContainer.setRefreshing(false);
+            }
+        });
+
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
     }
 
     protected void queryPosts() {
@@ -121,5 +235,41 @@ public class PostsFragment extends Fragment {
                 postsAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    public static String calculateTimeAgo(Date createdAt) {
+
+        int SECOND_MILLIS = 1000;
+        int MINUTE_MILLIS = 60 * SECOND_MILLIS;
+        int HOUR_MILLIS = 60 * MINUTE_MILLIS;
+        int DAY_MILLIS = 24 * HOUR_MILLIS;
+
+        try {
+            createdAt.getTime();
+            long time = createdAt.getTime();
+            long now = System.currentTimeMillis();
+
+            final long diff = now - time;
+            if (diff < MINUTE_MILLIS) {
+                return "just now";
+            } else if (diff < 2 * MINUTE_MILLIS) {
+                return "a minute ago";
+            } else if (diff < 50 * MINUTE_MILLIS) {
+                return diff / MINUTE_MILLIS + " m";
+            } else if (diff < 90 * MINUTE_MILLIS) {
+                return "an hour ago";
+            } else if (diff < 24 * HOUR_MILLIS) {
+                return diff / HOUR_MILLIS + " h";
+            } else if (diff < 48 * HOUR_MILLIS) {
+                return "yesterday";
+            } else {
+                return diff / DAY_MILLIS + " d";
+            }
+        } catch (Exception e) {
+            Log.i("Error:", "getRelativeTimeAgo failed", e);
+            e.printStackTrace();
+        }
+
+        return "";
     }
 }
